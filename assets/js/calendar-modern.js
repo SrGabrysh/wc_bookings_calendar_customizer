@@ -555,46 +555,24 @@
         "🔧 Google Calendar: Initialisation du conteneur avec dimensions fixes"
       );
 
-      // Fonction pour forcer les dimensions de manière responsive
+      // Fonction pour forcer les dimensions (approche conservatrice)
       const forceContainerDimensions = () => {
         const $bookingForm = $(
           "#wc-bookings-booking-form, .wc-bookings-booking-form"
         );
         const $summary = $(".single-product .product .summary");
-        const isMobile = window.innerWidth <= 768;
-        const isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
 
         if ($bookingForm.length) {
-          // Dimensions responsives selon la taille d'écran
+          // Forcer les dimensions du formulaire avec !important via setProperty
           const formElement = $bookingForm[0];
           if (formElement) {
-            if (isMobile) {
-              // Mobile : largeur flexible
-              formElement.style.setProperty("width", "100%", "important");
-              formElement.style.setProperty("min-width", "auto", "important");
-              formElement.style.setProperty("max-width", "100%", "important");
-              formElement.style.setProperty("margin", "16px 0", "important");
-            } else if (isTablet) {
-              // Tablette : largeur modérée
-              formElement.style.setProperty("width", "100%", "important");
-              formElement.style.setProperty("min-width", "auto", "important");
-              formElement.style.setProperty("max-width", "400px", "important");
-              formElement.style.setProperty("margin", "16px auto", "important");
-            } else {
-              // Desktop : dimensions fixes optimisées
-              formElement.style.setProperty("width", "450px", "important");
-              formElement.style.setProperty("min-width", "400px", "important");
-              formElement.style.setProperty("max-width", "500px", "important");
-              formElement.style.setProperty(
-                "margin-right",
-                "20px",
-                "important"
-              );
-            }
-
+            formElement.style.setProperty("width", "450px", "important");
+            formElement.style.setProperty("min-width", "450px", "important");
+            formElement.style.setProperty("max-width", "none", "important");
             formElement.style.setProperty("overflow", "visible", "important");
             formElement.style.setProperty("position", "relative", "important");
             formElement.style.setProperty("z-index", "1000", "important");
+            formElement.style.setProperty("margin-right", "20px", "important");
             formElement.style.setProperty(
               "box-sizing",
               "border-box",
@@ -636,15 +614,7 @@
       // Réappliquer après chargement complet
       setTimeout(forceContainerDimensions, 1000);
 
-      // Gestionnaire de redimensionnement responsive
-      let resizeTimeout;
-      $(window).on("resize", () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          console.log("📱 Redimensionnement détecté - Adaptation responsive");
-          forceContainerDimensions();
-        }, 250);
-      });
+      // Pas de gestionnaire de redimensionnement pour éviter les conflits
 
       // Solution nucléaire : observer et forcer en continu
       this.startContinuousOverride();

@@ -648,10 +648,10 @@ form.cart button[type="submit"]:not(.wc-bookings-booking-cost) {
 .single-product #wc-bookings-booking-form,
 #wc-bookings-booking-form,
 .wc-bookings-booking-form {
-  /* Dimensions flexibles pour desktop */
+  /* Dimensions desktop par défaut */
   width: 450px !important;
-  min-width: 400px !important;
-  max-width: 500px !important;
+  min-width: 450px !important;
+  max-width: none !important;
 
   /* Permettre le débordement si nécessaire */
   overflow: visible !important;
@@ -670,146 +670,95 @@ form.cart button[type="submit"]:not(.wc-bookings-booking-cost) {
   border: 1px solid var(--gcal-border-color) !important;
 }
 
-/* Forcer les conteneurs parents à s'adapter */
-.single-product .product .summary,
-.woocommerce-page .product .summary,
-.woocommerce .product .summary {
-  /* Élargir le conteneur parent */
-  min-width: 500px !important;
-  overflow: visible !important;
-
-  /* Assurer une intégration harmonieuse */
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* Conteneur spécifique du date picker */
-.wc-bookings-date-picker,
-.woocommerce .wc-bookings-date-picker,
-.woocommerce-page .wc-bookings-date-picker {
-  width: 100% !important;
-  min-width: 400px !important;
-  overflow: visible !important;
-}
-
-/* ============================================= */
-/* == Responsive Design == */
-/* ============================================= */
-
-/* Tablette */
-@media (max-width: 1024px) {
-  .woocommerce #wc-bookings-booking-form,
-  .woocommerce-page #wc-bookings-booking-form,
-  .single-product #wc-bookings-booking-form,
-  #wc-bookings-booking-form {
-    width: 100% !important;
-    max-width: 400px !important;
-    min-width: auto !important;
-    margin: 16px auto !important;
-  }
-
+/* Forcer les conteneurs parents à s'adapter - DESKTOP SEULEMENT */
+@media (min-width: 769px) {
   .single-product .product .summary,
   .woocommerce-page .product .summary,
   .woocommerce .product .summary {
-    min-width: auto !important;
-    width: 100% !important;
+    /* Élargir le conteneur parent */
+    min-width: 500px !important;
+    overflow: visible !important;
+
+    /* Assurer une intégration harmonieuse */
+    position: relative !important;
+    z-index: 1 !important;
   }
 }
 
-/* Mobile */
+/* Conteneur spécifique du date picker - DESKTOP SEULEMENT */
+@media (min-width: 769px) {
+  .wc-bookings-date-picker,
+  .woocommerce .wc-bookings-date-picker,
+  .woocommerce-page .wc-bookings-date-picker {
+    width: 100% !important;
+    min-width: 400px !important;
+    overflow: visible !important;
+  }
+}
+
+/* ============================================= */
+/* == Responsive Design CONSERVATEUR == */
+/* ============================================= */
+
+/* Mobile - Approche minimaliste qui ne casse pas la mise en page */
 @media (max-width: 768px) {
+  /* Réduire seulement la largeur du formulaire sans affecter les parents */
   .woocommerce #wc-bookings-booking-form,
   .woocommerce-page #wc-bookings-booking-form,
   .single-product #wc-bookings-booking-form,
   #wc-bookings-booking-form {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: auto !important;
-    padding: 16px !important;
-    margin: 16px 0 !important;
-    border-radius: 8px !important;
+    width: 320px !important;
+    min-width: 320px !important;
+    margin: 10px 0 !important;
+    padding: 12px !important;
   }
 
+  /* Adapter seulement le calendrier interne */
   .ui-datepicker {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 16px !important;
-    border-radius: 12px !important;
-  }
-
-  .ui-datepicker-calendar {
-    width: 100% !important;
-  }
-
-  .ui-datepicker-calendar td a,
-  .ui-datepicker-calendar td span {
-    width: calc((100% - 12px) / 7) !important;
-    height: 40px !important;
-    font-size: 14px !important;
-    min-width: 40px !important;
-  }
-
-  .ui-datepicker-header {
-    padding: 12px 8px !important;
-  }
-
-  .ui-datepicker-title {
-    font-size: 16px !important;
-  }
-
-  .block-picker ul {
-    gap: 8px !important;
-    justify-content: center !important;
-  }
-
-  .block-picker li a {
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    min-height: 44px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .wc-bookings-booking-cost {
-    padding: 20px !important;
-    font-size: 18px !important;
-    margin: 20px 0 !important;
-    border-radius: 12px !important;
-    min-height: 60px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-}
-
-/* Très petit mobile */
-@media (max-width: 480px) {
-  .ui-datepicker {
+    max-width: 280px !important;
     padding: 12px !important;
   }
 
   .ui-datepicker-calendar td a,
   .ui-datepicker-calendar td span {
-    height: 36px !important;
-    font-size: 13px !important;
-    min-width: 36px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
   }
 
-  .ui-datepicker-title {
+  /* Boutons créneaux plus compacts */
+  .block-picker li a {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Bouton réservation plus compact */
+  .wc-bookings-booking-cost {
+    padding: 12px !important;
     font-size: 14px !important;
   }
+}
 
-  .block-picker li a {
-    padding: 10px 12px !important;
-    font-size: 13px !important;
-    min-height: 40px !important;
+/* Très petit mobile - encore plus compact */
+@media (max-width: 480px) {
+  .woocommerce #wc-bookings-booking-form,
+  .woocommerce-page #wc-bookings-booking-form,
+  .single-product #wc-bookings-booking-form,
+  #wc-bookings-booking-form {
+    width: 280px !important;
+    min-width: 280px !important;
   }
 
-  .wc-bookings-booking-cost {
-    font-size: 16px !important;
-    padding: 16px !important;
-    min-height: 56px !important;
+  .ui-datepicker {
+    max-width: 250px !important;
+    padding: 8px !important;
+  }
+
+  .ui-datepicker-calendar td a,
+  .ui-datepicker-calendar td span {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
   }
 }
 
