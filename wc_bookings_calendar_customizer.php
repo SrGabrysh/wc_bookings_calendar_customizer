@@ -17,6 +17,13 @@ declare( strict_types=1 );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Test de base : vérifier que le plugin se charge
+add_action( 'wp_footer', function() {
+    if ( is_product() ) {
+        echo '<script>console.log("🔧 WC Bookings Customizer: Fichier principal chargé !");</script>';
+    }
+});
+
 // Constantes
 define( 'WC_BOOKINGS_CUSTOMIZER_VERSION', '1.0.2' );
 define( 'WC_BOOKINGS_CUSTOMIZER_PATH', plugin_dir_path( __FILE__ ) );
@@ -32,6 +39,7 @@ register_deactivation_hook( __FILE__, array( TBWeb\WCBookingsCustomizer\Core\Plu
 // Debug temporaire
 if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
     include_once WC_BOOKINGS_CUSTOMIZER_PATH . 'debug.php';
+    include_once WC_BOOKINGS_CUSTOMIZER_PATH . 'test-plugin-loading.php';
 }
 
 // Initialisation
