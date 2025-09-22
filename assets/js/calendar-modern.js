@@ -546,101 +546,91 @@
     }
 
     /**
-     * Corriger automatiquement la taille des conteneurs
+     * Forcer les dimensions du conteneur (approche directe)
      */
     fixContainerSizing() {
-      // Fonction pour redimensionner les conteneurs
-      const resizeContainers = () => {
+      console.log(
+        "🔧 Google Calendar: Initialisation du conteneur avec dimensions fixes"
+      );
+
+      // Fonction pour forcer les dimensions
+      const forceContainerDimensions = () => {
         const $bookingForm = $(
           "#wc-bookings-booking-form, .wc-bookings-booking-form"
         );
-        const $datePicker = $(".wc-bookings-date-picker");
-        const $calendar = $(".ui-datepicker");
+        const $summary = $(".single-product .product .summary");
 
         if ($bookingForm.length) {
-          // Vérifier si le conteneur est trop petit
-          const currentWidth = $bookingForm.width();
-          const minRequiredWidth = 380;
+          // Forcer les dimensions du formulaire
+          $bookingForm.css({
+            width: "450px",
+            "min-width": "450px",
+            "max-width": "none",
+            overflow: "visible",
+            position: "relative",
+            "z-index": "1000",
+            "margin-right": "20px",
+          });
 
-          if (currentWidth < minRequiredWidth) {
-            console.log(
-              "📅 Calendrier Google: Redimensionnement automatique du conteneur"
-            );
-
-            // Appliquer les corrections CSS dynamiquement
-            $bookingForm.css({
-              "min-width": minRequiredWidth + "px",
-              width: "auto",
+          // Forcer les dimensions du conteneur parent
+          if ($summary.length) {
+            $summary.css({
+              "min-width": "500px",
               overflow: "visible",
-              position: "relative",
-              "z-index": "999",
             });
-
-            // Forcer l'expansion des conteneurs parents
-            $bookingForm.parents().each(function () {
-              const $parent = $(this);
-              if ($parent.css("overflow") === "hidden") {
-                $parent.css("overflow", "visible");
-              }
-              if ($parent.width() < minRequiredWidth) {
-                $parent.css("min-width", minRequiredWidth + "px");
-              }
-            });
-
-            // Message de confirmation
-            this.showResizeNotification();
           }
-        }
 
-        // Redimensionner spécifiquement le calendrier si nécessaire
-        if ($calendar.length) {
-          const calendarWidth = $calendar.width();
-          if (calendarWidth < 320) {
-            $calendar.css("min-width", "320px");
-          }
+          console.log("✅ Conteneur forcé à 450px de largeur");
+
+          // Afficher les informations de debug
+          this.logContainerInfo();
         }
       };
 
       // Appliquer immédiatement
-      resizeContainers();
+      forceContainerDimensions();
 
-      // Réappliquer après un délai pour s'assurer que tout est chargé
-      setTimeout(resizeContainers, 500);
-      setTimeout(resizeContainers, 1000);
+      // Réappliquer après chargement complet
+      setTimeout(forceContainerDimensions, 1000);
+    }
 
-      // Observer les changements de taille de fenêtre
-      $(window).on("resize", Utils.debounce(resizeContainers, 250));
+    /**
+     * Outils de debug pour la console
+     */
+    logContainerInfo() {
+      const $bookingForm = $(
+        "#wc-bookings-booking-form, .wc-bookings-booking-form"
+      );
+      const $calendar = $(".ui-datepicker");
+      const $summary = $(".single-product .product .summary");
 
-      // Observer les mutations du DOM pour détecter les nouveaux calendriers
-      const observer = new MutationObserver((mutations) => {
-        let shouldResize = false;
-        mutations.forEach((mutation) => {
-          if (mutation.type === "childList") {
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === 1) {
-                // Element node
-                const $node = $(node);
-                if (
-                  $node.hasClass("ui-datepicker") ||
-                  $node.find(".ui-datepicker").length
-                ) {
-                  shouldResize = true;
-                }
-              }
-            });
-          }
+      console.group("📊 Debug Conteneur Google Calendar");
+
+      if ($bookingForm.length) {
+        console.log("📦 Formulaire booking:", {
+          width: $bookingForm.width() + "px",
+          height: $bookingForm.height() + "px",
+          visible: $bookingForm.is(":visible"),
+          overflow: $bookingForm.css("overflow"),
         });
+      }
 
-        if (shouldResize) {
-          setTimeout(resizeContainers, 100);
-        }
-      });
+      if ($calendar.length) {
+        console.log("📅 Calendrier UI:", {
+          width: $calendar.width() + "px",
+          height: $calendar.height() + "px",
+          visible: $calendar.is(":visible"),
+        });
+      }
 
-      // Observer le body pour les changements
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+      if ($summary.length) {
+        console.log("📄 Conteneur parent (.summary):", {
+          width: $summary.width() + "px",
+          overflow: $summary.css("overflow"),
+        });
+      }
+
+      console.groupEnd();
     }
 
     /**
@@ -733,9 +723,85 @@
   $(document).ready(function () {
     // Vérifier si WooCommerce Bookings est présent
     if ($("#wc-bookings-booking-form").length) {
-      new ModernBookingCalendar();
+      window.calendarInstance = new ModernBookingCalendar();
     }
   });
+
+  /**
+   * Outils de debug pour la console
+   */
+  window.GCalDebug = {
+    /**
+     * Tester les dimensions du conteneur
+     */
+    testContainerSize: function () {
+      const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+      const $calendar = $(".ui-datepicker");
+
+      console.group("🧪 Test Dimensions Conteneur");
+      console.log(
+        "Formulaire booking:",
+        $form.length ? `${$form.width()}px × ${$form.height()}px` : "Non trouvé"
+      );
+      console.log(
+        "Calendrier jQuery UI:",
+        $calendar.length
+          ? `${$calendar.width()}px × ${$calendar.height()}px`
+          : "Non trouvé"
+      );
+      console.log("Calendrier visible:", $calendar.is(":visible"));
+      console.groupEnd();
+
+      return {
+        formWidth: $form.width(),
+        formHeight: $form.height(),
+        calendarWidth: $calendar.width(),
+        calendarHeight: $calendar.height(),
+      };
+    },
+
+    /**
+     * Forcer le redimensionnement manuel
+     */
+    forceResize: function (width = 450) {
+      const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+      const $summary = $(".single-product .product .summary");
+
+      $form.css({
+        width: width + "px",
+        "min-width": width + "px",
+        overflow: "visible",
+      });
+
+      $summary.css({
+        "min-width": width + 50 + "px",
+        overflow: "visible",
+      });
+
+      console.log(`✅ Conteneur forcé à ${width}px`);
+      return this.testContainerSize();
+    },
+
+    /**
+     * Réinitialiser les styles
+     */
+    resetStyles: function () {
+      const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+      $form.removeAttr("style");
+      console.log("🔄 Styles réinitialisés");
+    },
+
+    /**
+     * Afficher les informations complètes
+     */
+    info: function () {
+      if (window.calendarInstance) {
+        window.calendarInstance.logContainerInfo();
+      } else {
+        console.log("❌ Instance de calendrier non trouvée");
+      }
+    },
+  };
 
   /**
    * Compatibilité avec les anciennes versions

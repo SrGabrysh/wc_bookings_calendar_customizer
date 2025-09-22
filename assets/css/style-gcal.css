@@ -558,43 +558,48 @@ body.woocommerce-page {
 }
 
 /* ============================================= */
-/* == Conteneur Parent - Redimensionnement Automatique == */
+/* == FORCER LES DIMENSIONS DU CONTENEUR POUR GOOGLE CALENDAR == */
 /* ============================================= */
 
-/* Forcer l'expansion du conteneur parent pour accueillir le calendrier Google */
-.woocommerce .wc-bookings-date-picker,
-.woocommerce-page .wc-bookings-date-picker,
-.single-product .wc-bookings-date-picker {
-  min-width: 380px !important;
-  width: auto !important;
-  overflow: visible !important;
-}
-
-/* Redimensionner les conteneurs parents de WooCommerce Bookings */
-.woocommerce .wc-bookings-booking-form,
-.woocommerce-page .wc-bookings-booking-form,
-.single-product .wc-bookings-booking-form,
+/* PRIORITÉ ABSOLUE : Forcer les dimensions du conteneur pour accueillir le calendrier Google Calendar */
+.woocommerce #wc-bookings-booking-form,
+.woocommerce-page #wc-bookings-booking-form,
+.single-product #wc-bookings-booking-form,
+#wc-bookings-booking-form,
 .wc-bookings-booking-form {
-  min-width: 400px !important;
-  width: auto !important;
-  max-width: 100% !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
-}
+  /* Dimensions fixes pour accueillir le calendrier Google Calendar */
+  width: 450px !important;
+  min-width: 450px !important;
+  max-width: none !important;
 
-/* Assurer que le conteneur du produit s'adapte */
-.single-product .product .summary {
+  /* Permettre le débordement si nécessaire */
   overflow: visible !important;
-}
 
-.single-product .woocommerce-tabs {
-  overflow: visible !important;
-}
-
-/* Conteneur spécifique pour les pages produit */
-.single-product .wc-bookings-booking-form {
+  /* Position et z-index pour éviter les conflits */
   position: relative !important;
-  z-index: 10 !important;
+  z-index: 1000 !important;
+
+  /* Marges pour éviter la collision avec les éléments adjacents */
+  margin-left: 0 !important;
+  margin-right: 20px !important;
+}
+
+/* Forcer les conteneurs parents à s'adapter */
+.single-product .product .summary,
+.woocommerce-page .product .summary,
+.woocommerce .product .summary {
+  /* Élargir le conteneur parent */
+  min-width: 500px !important;
+  overflow: visible !important;
+}
+
+/* Conteneur spécifique du date picker */
+.wc-bookings-date-picker,
+.woocommerce .wc-bookings-date-picker,
+.woocommerce-page .wc-bookings-date-picker {
+  width: 100% !important;
+  min-width: 400px !important;
+  overflow: visible !important;
 }
 
 /* ============================================= */
@@ -602,18 +607,21 @@ body.woocommerce-page {
 /* ============================================= */
 
 @media (max-width: 768px) {
-  /* Sur mobile, permettre le scroll horizontal si nécessaire */
-  .woocommerce .wc-bookings-booking-form,
-  .woocommerce-page .wc-bookings-booking-form,
-  .single-product .wc-bookings-booking-form {
-    min-width: 320px !important;
-    max-width: calc(100vw - 40px) !important;
-    overflow-x: auto !important;
-  }
-
+  /* Sur mobile, réduire mais garder une taille suffisante */
+  .woocommerce #wc-bookings-booking-form,
+  .woocommerce-page #wc-bookings-booking-form,
+  .single-product #wc-bookings-booking-form,
   #wc-bookings-booking-form {
+    width: 380px !important;
+    min-width: 380px !important;
+    overflow-x: auto !important;
     padding: 16px !important;
     margin: 10px 0 !important;
+  }
+
+  /* Permettre le scroll horizontal sur mobile si nécessaire */
+  body {
+    overflow-x: auto !important;
   }
 
   .wc-bookings-date-picker-date-fields {

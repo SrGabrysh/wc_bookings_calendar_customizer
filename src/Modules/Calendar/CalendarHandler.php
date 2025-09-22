@@ -93,21 +93,22 @@ class CalendarHandler {
                 visibility: visible !important;
             }
             
-            /* CSS critique pour redimensionnement automatique du conteneur */
-            .wc-bookings-booking-form,
-            .wc-bookings-date-picker {
-                min-width: 380px !important;
-                width: auto !important;
+            /* CSS CRITIQUE : Forcer les dimensions du conteneur pour Google Calendar */
+            #wc-bookings-booking-form,
+            .wc-bookings-booking-form {
+                width: 450px !important;
+                min-width: 450px !important;
+                max-width: none !important;
                 overflow: visible !important;
                 position: relative !important;
-                z-index: 999 !important;
+                z-index: 1000 !important;
             }
             
-            /* Forcer l\'expansion des conteneurs parents */
+            /* Forcer l\'élargissement des conteneurs parents */
             .single-product .product .summary,
             .woocommerce-page .product .summary {
+                min-width: 500px !important;
                 overflow: visible !important;
-                min-width: 400px !important;
             }
         ' );
     }
