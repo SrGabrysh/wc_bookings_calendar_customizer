@@ -603,14 +603,13 @@
           console.log("📱 Mobile détecté - Laisser le CSS responsive gérer");
         }
 
-          console.log("✅ Conteneur forcé à 450px de largeur");
+        console.log("✅ Conteneur forcé à 450px de largeur");
 
-          // Afficher les informations de debug
-          this.logContainerInfo();
+        // Afficher les informations de debug
+        this.logContainerInfo();
 
-          // Ajouter un outil de debug pour analyser la priorité CSS
-          this.addCSSDebugTool();
-        }
+        // Ajouter un outil de debug pour analyser la priorité CSS
+        this.addCSSDebugTool();
       };
 
       // Appliquer immédiatement
