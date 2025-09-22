@@ -111,3 +111,7 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 ---
 
 **Développé par TB-Web avec ❤️ pour une meilleure expérience de réservation**
+
+
+---
+Dernière mise à jour : 2025-09-22 11:26:34
