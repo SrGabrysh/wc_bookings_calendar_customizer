@@ -1,0 +1,28 @@
+{
+  "name": "tb-web/wc-bookings-calendar-customizer",
+  "description": "Plugin WordPress pour personnaliser le calendrier WooCommerce Bookings avec des designs modernes",
+  "type": "wordpress-plugin",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "TBWeb\\WCBookingsCustomizer\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "TB-Web",
+      "email": "contact@tb-web.fr"
+    }
+  ],
+  "keywords": [
+    "wordpress",
+    "woocommerce",
+    "bookings",
+    "calendar",
+    "customizer"
+  ],
+  "license": "GPL-2.0-or-later"
+}
