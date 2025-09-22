@@ -78,9 +78,9 @@ class CalendarHandler {
             WC_BOOKINGS_CUSTOMIZER_VERSION . '-' . time() // Cache busting pour debug
         );
         
-        // Forcer la priorité CSS avec du CSS inline pour override complet
+        // CSS inline responsive qui n'écrase pas les media queries
         wp_add_inline_style( 'wc-bookings-customizer-style', '
-            /* Force Google Calendar Style Priority - Override tout */
+            /* Force Google Calendar Style Priority - Police seulement */
             .wc-bookings-booking-form,
             .wc-bookings-booking-form *,
             #wc-bookings-booking-form,
@@ -96,22 +96,23 @@ class CalendarHandler {
                 visibility: visible !important;
             }
             
-            /* CSS CRITIQUE : Forcer les dimensions du conteneur pour Google Calendar */
-            #wc-bookings-booking-form,
-            .wc-bookings-booking-form {
-                width: 450px !important;
-                min-width: 450px !important;
-                max-width: none !important;
-                overflow: visible !important;
-                position: relative !important;
-                z-index: 1000 !important;
-            }
-            
-            /* Forcer l\'élargissement des conteneurs parents */
-            .single-product .product .summary,
-            .woocommerce-page .product .summary {
-                min-width: 500px !important;
-                overflow: visible !important;
+            /* Dimensions responsives - DESKTOP SEULEMENT */
+            @media (min-width: 769px) {
+                #wc-bookings-booking-form,
+                .wc-bookings-booking-form {
+                    width: 450px !important;
+                    min-width: 450px !important;
+                    max-width: none !important;
+                    overflow: visible !important;
+                    position: relative !important;
+                    z-index: 1000 !important;
+                }
+                
+                .single-product .product .summary,
+                .woocommerce-page .product .summary {
+                    min-width: 500px !important;
+                    overflow: visible !important;
+                }
             }
         ' );
     }

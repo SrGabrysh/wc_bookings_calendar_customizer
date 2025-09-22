@@ -555,15 +555,16 @@
         "🔧 Google Calendar: Initialisation du conteneur avec dimensions fixes"
       );
 
-      // Fonction pour forcer les dimensions (approche conservatrice)
+      // Fonction pour forcer les dimensions (seulement sur desktop)
       const forceContainerDimensions = () => {
         const $bookingForm = $(
           "#wc-bookings-booking-form, .wc-bookings-booking-form"
         );
         const $summary = $(".single-product .product .summary");
+        const isMobile = window.innerWidth <= 768;
 
-        if ($bookingForm.length) {
-          // Forcer les dimensions du formulaire avec !important via setProperty
+        if ($bookingForm.length && !isMobile) {
+          // Forcer les dimensions SEULEMENT sur desktop
           const formElement = $bookingForm[0];
           if (formElement) {
             formElement.style.setProperty("width", "450px", "important");
@@ -580,7 +581,7 @@
             );
           }
 
-          // Forcer les dimensions du conteneur parent avec !important
+          // Forcer les dimensions du conteneur parent avec !important (desktop seulement)
           if ($summary.length) {
             const summaryElement = $summary[0];
             if (summaryElement) {
@@ -597,6 +598,10 @@
               summaryElement.style.setProperty("width", "auto", "important");
             }
           }
+        } else if (isMobile) {
+          // Sur mobile, laisser le CSS prendre le contrôle
+          console.log("📱 Mobile détecté - Laisser le CSS responsive gérer");
+        }
 
           console.log("✅ Conteneur forcé à 450px de largeur");
 

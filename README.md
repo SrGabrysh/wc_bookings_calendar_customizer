@@ -102,7 +102,7 @@ Les logs sont disponibles via WooCommerce > État > Journaux (source: `wc-bookin
 ## 📞 Support
 
 - **Auteur** : TB-Web
-- **Version** : 1.3.1
+- **Version** : 1.3.3
 - **Licence** : GPL v2 or later
 
 ## 🔄 Mises à jour
@@ -117,15 +117,21 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 
 ## 📋 Changelog
 
-### Version 1.3.1 (2025-09-22)
+### Version 1.3.3 (2025-09-22)
 
-- 🛠️ **Correction critique** : Rollback de l'approche responsive qui cassait la mise en page
-- 🎯 Approche conservatrice : réduction de taille sur mobile sans affecter les parents
-- 📱 Mobile (≤768px) : calendrier réduit à 320px pour éviter le débordement
-- 📱 Très petit mobile (≤480px) : calendrier ultra-compact à 280px
-- 🧹 Suppression des modifications qui perturbaient la structure de page
-- ✅ Préservation de la mise en page générale du site
-- 🔧 Retour à la stabilité avec amélioration mobile minimaliste
+- 🎯 **CORRECTION DÉFINITIVE** : Identification et résolution de la cause racine
+- 🔍 Diagnostic précis : CSS inline PHP écrasait les media queries responsive
+- 📱 Encapsulation du CSS inline dans @media (min-width: 769px) pour desktop uniquement
+- ✅ Libération des règles responsive CSS pour mobile (320px/280px)
+- 🧹 Suppression des dimensions fixes forcées sur mobile
+- 💡 Solution basée sur analyse technique approfondie des fichiers
+- 🚀 Responsive design enfin fonctionnel sans casser la mise en page
+
+### Version 1.3.1-1.3.2 (2025-09-22) - PARTIELLES
+
+- 🛠️ Tentatives de correction avec approches diverses
+- 🎯 Approches conservatrices mais problème racine non identifié
+- 📱 Améliorations CSS mais CSS inline PHP toujours problématique
 
 ### Version 1.3.0 (2025-09-22) - REVERTÉE
 
