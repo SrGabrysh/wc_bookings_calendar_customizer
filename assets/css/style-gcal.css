@@ -30,6 +30,10 @@ body.woocommerce-page {
   background: var(--gcal-background) !important;
 }
 
+/* Force l'application sur toutes les pages avec WooCommerce Bookings */
+.woocommerce #wc-bookings-booking-form,
+.woocommerce-page #wc-bookings-booking-form,
+.single-product #wc-bookings-booking-form,
 #wc-bookings-booking-form {
   font-family: "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, sans-serif !important;
