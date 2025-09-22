@@ -19,6 +19,9 @@ class CalendarHandler {
     public function __construct( $logger ) {
         $this->logger = $logger;
         $this->selected_style = $this->get_selected_style();
+        
+        // Personnaliser le texte du coût de réservation
+        $this->customize_booking_cost_text();
     }
     
     /**
@@ -197,5 +200,32 @@ class CalendarHandler {
         </style>';
         
         $this->logger->debug( 'Force override CSS injecté dans wp_head' );
+    }
+    
+    /**
+     * Personnaliser le texte du coût de réservation
+     */
+    private function customize_booking_cost_text() {
+        add_filter( 'woocommerce_bookings_booking_cost_string', array( $this, 'custom_booking_cost_text' ), 10, 2 );
+        $this->logger->debug( 'Filtre de personnalisation du texte de coût ajouté' );
+    }
+    
+    /**
+     * Modifier le texte affiché pour le coût de réservation
+     * 
+     * @param string $text Le texte original
+     * @param WC_Product_Booking $product Le produit de réservation
+     * @return string Le nouveau texte personnalisé
+     */
+    public function custom_booking_cost_text( $text, $product ) {
+        // Nouveau texte personnalisé
+        $custom_text = 'Réservez votre formation';
+        
+        $this->logger->debug( 'Texte de coût personnalisé appliqué', array( 
+            'ancien' => $text, 
+            'nouveau' => $custom_text 
+        ) );
+        
+        return $custom_text;
     }
 }

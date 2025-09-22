@@ -978,14 +978,14 @@
       $priceElement.addClass("price-button-initialized");
       console.log("✅ Élément prix transformé en bouton");
 
-      // Ajouter le texte d'indication
+      // Ajouter le texte d'indication adapté au nouveau texte
       const originalText = $priceElement.html();
-      $priceElement.attr("title", "Cliquez pour réserver");
+      $priceElement.attr("title", "Cliquez pour finaliser votre réservation");
 
-      // Ajouter l'indicateur visuel
+      // Ajouter l'indicateur visuel adapté (optionnel car le texte est déjà explicite)
       if (!$priceElement.find(".reservation-indicator").length) {
         $priceElement.append(
-          '<span class="reservation-indicator"> 👆 Cliquez pour réserver</span>'
+          '<span class="reservation-indicator"> 👆 Cliquez ici</span>'
         );
       }
 

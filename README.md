@@ -13,6 +13,7 @@ Ce plugin transforme l'apparence du calendrier de réservation WooCommerce Booki
 - **Responsive Design** : Optimisé pour tous les appareils
 - **Animations modernes** : Transitions fluides et interactions améliorées
 - **Accessibilité** : Support complet des standards d'accessibilité
+- **Texte personnalisé** : Modification du texte "Coût de la réservation" en "Réservez votre formation"
 - **Compatible** : WooCommerce 5.0+ et WooCommerce Bookings 1.15+
 
 ## 🛠️ Installation
@@ -101,7 +102,7 @@ Les logs sont disponibles via WooCommerce > État > Journaux (source: `wc-bookin
 ## 📞 Support
 
 - **Auteur** : TB-Web
-- **Version** : 1.0.0
+- **Version** : 1.2.0
 - **Licence** : GPL v2 or later
 
 ## 🔄 Mises à jour
@@ -112,6 +113,21 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 
 **Développé par TB-Web avec ❤️ pour une meilleure expérience de réservation**
 
+---
+
+## 📋 Changelog
+
+### Version 1.2.0 (2025-09-22)
+
+- ✨ **Nouvelle fonctionnalité** : Personnalisation du texte de coût de réservation
+- 🔧 Remplacement de "Coût de la réservation" par "Réservez votre formation"
+- 📱 Amélioration de l'expérience utilisateur avec un texte plus engageant
+- 🎨 Adaptation des tooltips et indicateurs visuels
+
+### Version 1.1.2 (2025-09-22)
+
+- 🐛 Corrections diverses et améliorations de stabilité
 
 ---
-Dernière mise à jour : 2025-09-22 15:06:12
+
+Dernière mise à jour : 2025-09-22 17:30:00
