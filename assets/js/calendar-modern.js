@@ -851,116 +851,55 @@
      * Attendre intelligemment que le formulaire de réservation soit prêt
      */
     waitForBookingFormReady() {
-      console.log(
-        "🔍 Attente de l'initialisation complète de WooCommerce Bookings..."
-      );
-
-      // Stratégie 1: Écouter les événements WooCommerce Bookings
-      this.listenForWooCommerceEvents();
-
-      // Stratégie 2: Polling avec détection jQuery UI améliorée
       let attempts = 0;
-      const maxAttempts = 20;
-      const baseDelay = 300;
+      const maxAttempts = 15;
+      const baseDelay = 200; // Commencer avec 200ms
 
       const checkAndTrigger = () => {
         attempts++;
 
-        // Vérifications plus complètes
+        // Vérifier si le formulaire et le calendrier sont prêts
         const $bookingForm = $(
           "#wc-bookings-booking-form, .wc-bookings-booking-form"
         );
-        const $datePicker = $(".wc-bookings-date-picker .picker");
+        const $datePicker = $(".wc-bookings-date-picker");
         const $calendar = $(".ui-datepicker");
-        const $dateFields = $(
-          ".booking_date_day, .booking_date_month, .booking_date_year"
-        );
 
-        // Conditions strictes pour considérer que c'est prêt
+        // Conditions pour considérer que c'est prêt
         const formReady =
           $bookingForm.length > 0 && $bookingForm.is(":visible");
         const datePickerReady = $datePicker.length > 0;
-        const calendarReady = $calendar.length > 0 && $calendar.is(":visible");
-        const dateFieldsReady = $dateFields.length >= 2; // Au moins jour et mois
-        const jqueryUIReady =
-          $datePicker.hasClass("hasDatepicker") ||
-          $(".hasDatepicker").length > 0;
+        const calendarExists = $calendar.length > 0;
 
-        console.log(
-          `🔍 Tentative ${attempts}: Form=${formReady}, DatePicker=${datePickerReady}, Calendar=${calendarReady}, Fields=${dateFieldsReady}, jQueryUI=${jqueryUIReady}`
-        );
-
-        if (formReady && datePickerReady && (calendarReady || jqueryUIReady)) {
+        if (formReady && datePickerReady) {
           console.log(
-            `✅ WooCommerce Bookings complètement initialisé après ${attempts} tentatives`
+            `✅ Formulaire de réservation prêt après ${attempts} tentatives`
           );
 
-          // Attendre encore un peu pour être sûr que jQuery UI est stable
+          // Attendre encore un peu pour que jQuery UI finisse l'initialisation
           setTimeout(() => {
             this.forceInitialDateSelection();
-          }, 500);
+          }, 300);
 
-          return;
+          return; // Arrêter les tentatives
         }
 
         if (attempts >= maxAttempts) {
           console.warn(
-            `⚠️ Timeout après ${maxAttempts} tentatives - Tentative finale`
+            `⚠️ Timeout: Formulaire non prêt après ${maxAttempts} tentatives`
           );
-          // Essayer quand même avec un délai plus long
-          setTimeout(() => {
-            this.forceInitialDateSelection();
-          }, 1000);
+          // Essayer quand même au cas où
+          this.forceInitialDateSelection();
           return;
         }
 
-        // Délai progressif plus conservateur
-        const delay = Math.min(baseDelay * attempts, 1500);
+        // Délai progressif : 200ms, 400ms, 600ms, puis plafonné à 1000ms
+        const delay = Math.min(baseDelay * attempts, 1000);
         setTimeout(checkAndTrigger, delay);
       };
 
-      // Démarrer après un délai initial
-      setTimeout(checkAndTrigger, 500);
-    }
-
-    /**
-     * Écouter les événements WooCommerce Bookings
-     */
-    listenForWooCommerceEvents() {
-      // Écouter les événements spécifiques à WooCommerce Bookings
-      $(document).on(
-        "wc_bookings_field_changed wc_booking_form_changed",
-        () => {
-          console.log("📅 Événement WooCommerce Bookings détecté");
-          setTimeout(() => {
-            this.forceInitialDateSelection();
-          }, 200);
-        }
-      );
-
-      // Écouter l'événement jQuery UI datepicker
-      $(document).on(
-        "datepicker:opened datepicker:closed",
-        ".ui-datepicker",
-        () => {
-          console.log("📅 Événement jQuery UI datepicker détecté");
-          setTimeout(() => {
-            this.forceInitialDateSelection();
-          }, 100);
-        }
-      );
-
-      // Écouter les changements sur les champs de date
-      $(document).on(
-        "change",
-        ".booking_date_day, .booking_date_month, .booking_date_year",
-        () => {
-          console.log("📅 Changement de date détecté");
-          setTimeout(() => {
-            this.updatePriceDisplayIfExists();
-          }, 300);
-        }
-      );
+      // Démarrer immédiatement
+      checkAndTrigger();
     }
 
     /**
@@ -1011,8 +950,8 @@
             $todayCellRetry.trigger("click");
             this.updatePriceDisplayIfExists();
           } else {
-            console.warn(
-              "❌ Date du jour définitivement non trouvée - calendrier peut-être non initialisé"
+            console.log(
+              "ℹ️ Sélection automatique non disponible - l'utilisateur peut sélectionner manuellement"
             );
           }
         }, 2000);
