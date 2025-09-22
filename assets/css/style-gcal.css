@@ -465,7 +465,7 @@ body.woocommerce-page {
 /* == Masquer le bouton WooCommerce disgracieux == */
 /* ============================================= */
 
-/* Masquer complètement le bouton de réservation WooCommerce */
+/* Masquer SEULEMENT le bouton de réservation WooCommerce (pas le formulaire !) */
 .wc-bookings-booking-form-button,
 .single_add_to_cart_button,
 button[name="add-to-cart"],
@@ -478,12 +478,11 @@ input[name="add-to-cart"],
   pointer-events: none !important;
 }
 
-/* Masquer aussi les conteneurs de boutons */
-.wc-bookings-booking-form .woocommerce-booking-form-button,
-.single-product .cart,
-.single-product .single_add_to_cart_button,
-.woocommerce .single-product form.cart,
-.woocommerce-page .single-product form.cart {
+/* ATTENTION : NE PAS masquer le formulaire .cart car il contient le calendrier ! */
+/* Masquer seulement les éléments spécifiques de bouton dans le formulaire */
+form.cart .wc-bookings-booking-form-button,
+form.cart .single_add_to_cart_button,
+form.cart button[type="submit"]:not(.wc-bookings-booking-cost) {
   display: none !important;
 }
 
