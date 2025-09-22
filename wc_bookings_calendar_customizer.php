@@ -25,7 +25,7 @@ add_action( 'wp_footer', function() {
 });
 
 // Constantes
-define( 'WC_BOOKINGS_CUSTOMIZER_VERSION', '1.0.2' );
+define( 'WC_BOOKINGS_CUSTOMIZER_VERSION', '1.0.3' );
 define( 'WC_BOOKINGS_CUSTOMIZER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WC_BOOKINGS_CUSTOMIZER_URL', plugin_dir_url( __FILE__ ) );
 
