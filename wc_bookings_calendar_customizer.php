@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Bookings Calendar Customizer
  * Plugin URI: https://tb-web.fr
  * Description: Personnalise l'apparence du calendrier WooCommerce Bookings avec le style Google Calendar
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: TB-Web
  * License: GPL v2 or later
  * Text Domain: wc-bookings-calendar-customizer
@@ -25,7 +25,7 @@ add_action( 'wp_footer', function() {
 });
 
 // Constantes
-define( 'WC_BOOKINGS_CUSTOMIZER_VERSION', '1.0.3' );
+define( 'WC_BOOKINGS_CUSTOMIZER_VERSION', '1.0.4' );
 define( 'WC_BOOKINGS_CUSTOMIZER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WC_BOOKINGS_CUSTOMIZER_URL', plugin_dir_url( __FILE__ ) );
 
