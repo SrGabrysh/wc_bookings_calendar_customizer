@@ -611,6 +611,9 @@
 
       // Réappliquer après chargement complet
       setTimeout(forceContainerDimensions, 1000);
+
+      // Solution nucléaire : observer et forcer en continu
+      this.startContinuousOverride();
     }
 
     /**
@@ -715,6 +718,110 @@
           };
         }
       };
+    }
+
+    /**
+     * Solution nucléaire : surveillance continue et override
+     */
+    startContinuousOverride() {
+      let overrideCount = 0;
+      const maxOverrides = 10;
+
+      const nuclearOverride = () => {
+        const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+
+        if ($form.length && overrideCount < maxOverrides) {
+          const currentWidth = $form.width();
+
+          if (currentWidth < 450) {
+            overrideCount++;
+            console.log(
+              `🚀 Override nucléaire #${overrideCount}: ${currentWidth}px → 450px`
+            );
+
+            // Méthode 1: setProperty avec important
+            const element = $form[0];
+            element.style.setProperty("width", "450px", "important");
+            element.style.setProperty("min-width", "450px", "important");
+            element.style.setProperty("max-width", "none", "important");
+
+            // Méthode 2: Injection CSS dynamique ultra-prioritaire
+            const styleId = "gcal-nuclear-override";
+            let $existingStyle = $(`#${styleId}`);
+
+            if ($existingStyle.length === 0) {
+              const nuclearCSS = `
+                <style id="${styleId}">
+                  #wc-bookings-booking-form,
+                  .wc-bookings-booking-form,
+                  .single-product #wc-bookings-booking-form,
+                  .woocommerce #wc-bookings-booking-form,
+                  .woocommerce-page #wc-bookings-booking-form {
+                    width: 450px !important;
+                    min-width: 450px !important;
+                    max-width: none !important;
+                    overflow: visible !important;
+                    position: relative !important;
+                    z-index: 9999 !important;
+                  }
+                  
+                  .single-product .product .summary,
+                  .woocommerce .product .summary {
+                    min-width: 500px !important;
+                    overflow: visible !important;
+                  }
+                </style>
+              `;
+              $("head").append(nuclearCSS);
+            }
+
+            // Programmer une vérification
+            setTimeout(() => {
+              const newWidth = $form.width();
+              if (newWidth < 450) {
+                console.log(
+                  `❌ Override échoué: ${newWidth}px. Nouvelle tentative...`
+                );
+                setTimeout(nuclearOverride, 500);
+              } else {
+                console.log(`✅ Override réussi: ${newWidth}px`);
+                // Arrêter la surveillance après succès
+                overrideCount = maxOverrides;
+              }
+            }, 200);
+          }
+        }
+      };
+
+      // Démarrer immédiatement
+      nuclearOverride();
+
+      // Observer les mutations pour réagir aux changements
+      const observer = new MutationObserver((mutations) => {
+        let shouldCheck = false;
+        mutations.forEach((mutation) => {
+          if (
+            mutation.type === "attributes" &&
+            (mutation.attributeName === "style" ||
+              mutation.attributeName === "class")
+          ) {
+            shouldCheck = true;
+          }
+        });
+
+        if (shouldCheck && overrideCount < maxOverrides) {
+          setTimeout(nuclearOverride, 100);
+        }
+      });
+
+      // Observer le formulaire
+      const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+      if ($form.length) {
+        observer.observe($form[0], {
+          attributes: true,
+          attributeFilter: ["style", "class"],
+        });
+      }
     }
 
     /**
