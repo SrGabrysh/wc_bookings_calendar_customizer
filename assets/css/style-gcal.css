@@ -462,68 +462,29 @@ body.woocommerce-page {
 }
 
 /* ============================================= */
-/* == Bouton d'action principal == */
+/* == Masquer le bouton WooCommerce disgracieux == */
 /* ============================================= */
 
-.wc-bookings-booking-form-button {
-  width: 100% !important;
-  padding: 16px 32px !important;
-  background: linear-gradient(
-    135deg,
-    var(--gcal-primary-blue) 0%,
-    var(--gcal-secondary-blue) 100%
-  ) !important;
-  color: #ffffff !important;
-  border: none !important;
-  border-radius: 28px !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  margin-top: 32px !important;
-  font-family: inherit !important;
-  text-transform: none !important;
-  letter-spacing: 0.5px !important;
-  position: relative !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3) !important;
+/* Masquer complètement le bouton de réservation WooCommerce */
+.wc-bookings-booking-form-button,
+.single_add_to_cart_button,
+button[name="add-to-cart"],
+input[name="add-to-cart"],
+.woocommerce .single-product .single_add_to_cart_button,
+.woocommerce-page .single-product .single_add_to_cart_button {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-.wc-bookings-booking-form-button::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: -100% !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  ) !important;
-  transition: left 0.6s !important;
-}
-
-.wc-bookings-booking-form-button:hover::before {
-  left: 100% !important;
-}
-
-.wc-bookings-booking-form-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1b66c9 0%, #3b82f6 100%) !important;
-  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4) !important;
-  transform: translateY(-2px) scale(1.02) !important;
-}
-
-.wc-bookings-booking-form-button:active {
-  transform: translateY(0) !important;
-}
-
-.wc-bookings-booking-form-button:disabled {
-  background: var(--gcal-text-secondary) !important;
-  cursor: not-allowed !important;
-  transform: none !important;
-  box-shadow: none !important;
+/* Masquer aussi les conteneurs de boutons */
+.wc-bookings-booking-form .woocommerce-booking-form-button,
+.single-product .cart,
+.single-product .single_add_to_cart_button,
+.woocommerce .single-product form.cart,
+.woocommerce-page .single-product form.cart {
+  display: none !important;
 }
 
 /* ============================================= */
@@ -541,6 +502,102 @@ body.woocommerce-page {
   font-weight: 500 !important;
   color: var(--gcal-primary-blue) !important;
   transition: all 0.3s ease !important;
+
+  /* Transformation en bouton de réservation élégant */
+  cursor: pointer !important;
+  user-select: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.wc-bookings-booking-cost:hover {
+  background: linear-gradient(
+    135deg,
+    var(--gcal-primary-blue),
+    var(--gcal-secondary-blue)
+  ) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4) !important;
+}
+
+.wc-bookings-booking-cost:active {
+  transform: translateY(0) scale(0.98) !important;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3) !important;
+}
+
+/* Effet de ripple au clic */
+.wc-bookings-booking-cost::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  transform: translate(-50%, -50%) !important;
+  transition: width 0.6s, height 0.6s !important;
+  pointer-events: none !important;
+}
+
+.wc-bookings-booking-cost.ripple-effect::before {
+  width: 300px !important;
+  height: 300px !important;
+}
+
+/* Indicateur de réservation */
+.wc-bookings-booking-cost .reservation-indicator {
+  display: block !important;
+  font-size: 12px !important;
+  margin-top: 8px !important;
+  color: var(--gcal-text-secondary) !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
+  animation: pulseIndicator 2s infinite !important;
+}
+
+@keyframes pulseIndicator {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* État de traitement */
+.wc-bookings-booking-cost.processing {
+  background: linear-gradient(135deg, var(--gcal-warning), #ffd54f) !important;
+  color: var(--gcal-text-primary) !important;
+  animation: processingPulse 1s infinite !important;
+}
+
+@keyframes processingPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Effet ripple personnalisé pour le prix */
+.price-ripple {
+  position: absolute !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  animation: priceRipple 0.6s linear !important;
+  pointer-events: none !important;
+}
+
+@keyframes priceRipple {
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
 }
 
 /* Animation de mise en évidence du prix */

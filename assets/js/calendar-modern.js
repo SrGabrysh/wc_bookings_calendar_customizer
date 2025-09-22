@@ -76,6 +76,7 @@
       this.addPriceAnimations();
       this.fixContainerSizing();
       this.triggerInitialPriceCalculation();
+      this.transformPriceToButton();
     }
 
     /**
@@ -923,6 +924,166 @@
     }
 
     /**
+     * Transformer l'élément prix en bouton de réservation élégant
+     */
+    transformPriceToButton() {
+      console.log("🎨 Transformation du prix en bouton de réservation");
+
+      // Attendre que l'élément prix soit présent
+      const waitForPriceElement = () => {
+        const $priceElement = $(".wc-bookings-booking-cost");
+
+        if ($priceElement.length) {
+          this.setupPriceButtonBehavior($priceElement);
+        } else {
+          // Réessayer après un délai
+          setTimeout(waitForPriceElement, 1000);
+        }
+      };
+
+      // Démarrer immédiatement et surveiller les changements
+      waitForPriceElement();
+
+      // Observer les changements dans le DOM pour les nouveaux éléments prix
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) {
+              const $newPriceElement = $(node).find(
+                ".wc-bookings-booking-cost"
+              );
+              if ($newPriceElement.length) {
+                this.setupPriceButtonBehavior($newPriceElement);
+              }
+            }
+          });
+        });
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    /**
+     * Configurer le comportement bouton sur l'élément prix
+     */
+    setupPriceButtonBehavior($priceElement) {
+      // Éviter la double initialisation
+      if ($priceElement.hasClass("price-button-initialized")) {
+        return;
+      }
+
+      $priceElement.addClass("price-button-initialized");
+      console.log("✅ Élément prix transformé en bouton");
+
+      // Ajouter le texte d'indication
+      const originalText = $priceElement.html();
+      $priceElement.attr("title", "Cliquez pour réserver");
+
+      // Ajouter l'indicateur visuel
+      if (!$priceElement.find(".reservation-indicator").length) {
+        $priceElement.append(
+          '<span class="reservation-indicator"> 👆 Cliquez pour réserver</span>'
+        );
+      }
+
+      // Gérer le clic sur l'élément prix
+      $priceElement.off("click.priceButton").on("click.priceButton", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.handlePriceButtonClick($priceElement);
+      });
+
+      // Gérer l'effet de ripple
+      $priceElement.off("mousedown.ripple").on("mousedown.ripple", (e) => {
+        this.createRippleEffect($priceElement, e);
+      });
+    }
+
+    /**
+     * Gérer le clic sur le bouton prix
+     */
+    handlePriceButtonClick($priceElement) {
+      console.log("🎯 Clic sur le bouton de réservation (prix)");
+
+      // Ajouter l'animation de clic
+      $priceElement.addClass("ripple-effect");
+      setTimeout(() => {
+        $priceElement.removeClass("ripple-effect");
+      }, 600);
+
+      // Trouver et déclencher le bouton de réservation caché
+      const $hiddenButton = $(
+        '.wc-bookings-booking-form-button, .single_add_to_cart_button, button[name="add-to-cart"]'
+      ).first();
+
+      if ($hiddenButton.length) {
+        console.log("📦 Déclenchement de la réservation WooCommerce");
+
+        // Afficher un feedback immédiat
+        this.showReservationFeedback($priceElement);
+
+        // Déclencher le bouton caché
+        $hiddenButton.trigger("click");
+      } else {
+        console.warn("⚠️ Bouton de réservation WooCommerce non trouvé");
+
+        // Fallback: soumettre le formulaire directement
+        const $form = $(
+          "#wc-bookings-booking-form, .wc-bookings-booking-form"
+        ).closest("form");
+        if ($form.length) {
+          $form.trigger("submit");
+        }
+      }
+    }
+
+    /**
+     * Afficher un feedback de réservation
+     */
+    showReservationFeedback($priceElement) {
+      const originalText = $priceElement.html();
+
+      $priceElement.html("🔄 Réservation en cours...");
+      $priceElement.addClass("processing");
+
+      // Restaurer après 3 secondes si pas de redirection
+      setTimeout(() => {
+        if ($priceElement.hasClass("processing")) {
+          $priceElement.html(originalText);
+          $priceElement.removeClass("processing");
+        }
+      }, 3000);
+    }
+
+    /**
+     * Créer l'effet de ripple personnalisé pour le prix
+     */
+    createRippleEffect($element, event) {
+      const $ripple = $('<span class="price-ripple"></span>');
+      const rect = $element[0].getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = event.clientX - rect.left - size / 2;
+      const y = event.clientY - rect.top - size / 2;
+
+      $ripple.css({
+        width: size,
+        height: size,
+        left: x,
+        top: y,
+      });
+
+      $element.append($ripple);
+
+      setTimeout(() => {
+        $ripple.remove();
+      }, 600);
+    }
+
+    /**
      * Afficher une notification de redimensionnement
      */
     showResizeNotification() {
@@ -1146,6 +1307,56 @@
     forcePriceDisplay: function () {
       if (window.calendarInstance) {
         window.calendarInstance.updatePriceDisplayIfExists();
+      }
+    },
+
+    /**
+     * Tester la transformation du prix en bouton
+     */
+    testPriceButton: function () {
+      console.group("🧪 Test Bouton Prix");
+
+      const $priceElement = $(".wc-bookings-booking-cost");
+      const $hiddenButton = $(
+        '.wc-bookings-booking-form-button, .single_add_to_cart_button, button[name="add-to-cart"]'
+      );
+
+      console.log("Élément prix trouvé:", $priceElement.length > 0);
+      console.log(
+        "Prix initialisé comme bouton:",
+        $priceElement.hasClass("price-button-initialized")
+      );
+      console.log("Bouton WooCommerce caché:", $hiddenButton.length > 0);
+      console.log(
+        "Bouton masqué par CSS:",
+        $hiddenButton.css("display") === "none"
+      );
+
+      if ($priceElement.length) {
+        console.log("Contenu prix:", $priceElement.text().trim());
+        console.log("Cursor style:", $priceElement.css("cursor"));
+      }
+
+      console.groupEnd();
+
+      return {
+        priceElement: $priceElement.length,
+        initialized: $priceElement.hasClass("price-button-initialized"),
+        hiddenButton: $hiddenButton.length,
+        buttonHidden: $hiddenButton.css("display") === "none",
+      };
+    },
+
+    /**
+     * Simuler un clic sur le prix
+     */
+    simulatePriceClick: function () {
+      const $priceElement = $(".wc-bookings-booking-cost");
+      if ($priceElement.length) {
+        console.log("🖱️ Simulation du clic sur le prix");
+        $priceElement.trigger("click");
+      } else {
+        console.log("❌ Élément prix non trouvé");
       }
     },
   };
