@@ -43,19 +43,25 @@ class CalendarHandler {
             return;
         }
         
-        // Désactiver tous les styles WooCommerce Bookings
+        // Désactiver tous les styles WooCommerce Bookings avec deregister pour être sûr
         wp_dequeue_style( 'wc-bookings-styles' );
+        wp_deregister_style( 'wc-bookings-styles' );
         wp_dequeue_style( 'wc_bookings_styles' );
+        wp_deregister_style( 'wc_bookings_styles' );
         wp_dequeue_style( 'jquery-ui-style' );
+        wp_deregister_style( 'jquery-ui-style' );
         wp_dequeue_style( 'wc-bookings-jquery-ui-styles' );
+        wp_deregister_style( 'wc-bookings-jquery-ui-styles' );
         wp_dequeue_style( 'jquery-ui-datepicker' );
+        wp_deregister_style( 'jquery-ui-datepicker' );
         wp_dequeue_style( 'jquery-ui-theme' );
+        wp_deregister_style( 'jquery-ui-theme' );
         
         // Désactiver également les scripts qui pourraient interférer
         wp_dequeue_script( 'wc-bookings-date-picker' );
         wp_dequeue_script( 'wc-bookings-time-picker' );
         
-        $this->logger->debug( 'Styles natifs désactivés' );
+        $this->logger->debug( 'Styles natifs désactivés avec deregister' );
     }
     
     /**
@@ -69,11 +75,22 @@ class CalendarHandler {
             WC_BOOKINGS_CUSTOMIZER_VERSION . '-' . time() // Cache busting pour debug
         );
         
-        // Forcer la priorité CSS avec du CSS inline si nécessaire
+        // Forcer la priorité CSS avec du CSS inline pour override complet
         wp_add_inline_style( 'wc-bookings-customizer-style', '
-            /* Force Google Calendar Style Priority */
-            #wc-bookings-booking-form {
+            /* Force Google Calendar Style Priority - Override tout */
+            .wc-bookings-booking-form,
+            .wc-bookings-booking-form *,
+            #wc-bookings-booking-form,
+            #wc-bookings-booking-form *,
+            .wc-bookings-date-picker,
+            .picker {
                 font-family: "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            }
+            
+            /* Forcer la visibilité du calendrier personnalisé */
+            .wc-bookings-booking-form {
+                display: block !important;
+                visibility: visible !important;
             }
         ' );
     }
@@ -123,5 +140,44 @@ class CalendarHandler {
         
         $this->selected_style = $new_style;
         $this->logger->info( 'Style mis à jour', array( 'nouveau_style' => $new_style ) );
+    }
+    
+    /**
+     * Forcer l'override des styles en dernier recours
+     */
+    public function force_style_override() {
+        if ( ! $this->should_enqueue_assets() ) {
+            return;
+        }
+        
+        echo '<style id="wc-bookings-customizer-force-override">
+            /* Force override des styles WooCommerce Bookings */
+            .wc-bookings-booking-form,
+            #wc-bookings-booking-form {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            
+            /* Désactiver complètement les styles jQuery UI */
+            .ui-widget-content,
+            .ui-widget-header,
+            .ui-state-default,
+            .ui-corner-all {
+                background: none !important;
+                border: none !important;
+                color: inherit !important;
+            }
+            
+            /* Forcer la police Google */
+            .wc-bookings-booking-form,
+            .wc-bookings-booking-form *,
+            .ui-datepicker,
+            .ui-datepicker * {
+                font-family: "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            }
+        </style>';
+        
+        $this->logger->debug( 'Force override CSS injecté dans wp_head' );
     }
 }
