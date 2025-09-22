@@ -937,24 +937,73 @@
           this.updatePriceDisplayIfExists();
         }, 600);
       } else {
-        // Une seule tentative supplémentaire après un délai plus long
-        console.log("⚠️ Date du jour non trouvée, tentative finale dans 2s...");
+        // Recherche plus approfondie avec plusieurs tentatives
+        console.log("🔍 Date du jour non trouvée, recherche approfondie...");
 
-        setTimeout(() => {
-          const $todayCellRetry = $(
-            ".ui-datepicker-today a, .ui-datepicker-current-day a, .ui-state-active"
-          );
+        let retryAttempts = 0;
+        const maxRetries = 10;
 
-          if ($todayCellRetry.length) {
-            console.log("✅ Date du jour trouvée lors de la tentative finale");
-            $todayCellRetry.trigger("click");
-            this.updatePriceDisplayIfExists();
-          } else {
+        const deepSearch = () => {
+          retryAttempts++;
+
+          // Sélecteurs étendus pour tous les cas possibles
+          const allSelectors = [
+            ".ui-datepicker-today a",
+            ".ui-datepicker-current-day a",
+            ".ui-state-highlight",
+            ".ui-state-active",
+            ".ui-state-default.ui-state-highlight",
+            ".wc-bookings-date-picker .ui-state-default",
+            ".picker .ui-state-default",
+            "td.ui-datepicker-today a",
+            "td.ui-datepicker-current-day a",
+          ];
+
+          let found = false;
+
+          for (const selector of allSelectors) {
+            const $element = $(selector);
+            if ($element.length > 0) {
+              console.log(
+                `🎯 Date du jour trouvée avec: ${selector} (tentative ${retryAttempts})`
+              );
+              $element.first().trigger("click");
+
+              setTimeout(() => {
+                const $form = $(
+                  "#wc-bookings-booking-form, .wc-bookings-booking-form"
+                );
+                if ($form.length) {
+                  $form.trigger("wc_bookings_field_changed");
+                  const $dateFields = $form.find(
+                    ".booking_date_day, .booking_date_month, .booking_date_year"
+                  );
+                  $dateFields.trigger("change");
+                }
+                this.updatePriceDisplayIfExists();
+              }, 300);
+
+              found = true;
+              break;
+            }
+          }
+
+          if (!found && retryAttempts < maxRetries) {
             console.log(
-              "ℹ️ Sélection automatique non disponible - l'utilisateur peut sélectionner manuellement"
+              `🔍 Tentative ${retryAttempts}/${maxRetries} - Recherche dans 500ms...`
+            );
+            setTimeout(deepSearch, 500);
+          } else if (!found) {
+            console.error(
+              "❌ CRITIQUE: Date du jour non trouvée après recherche approfondie"
+            );
+            console.error(
+              "🔧 Le calendrier jQuery UI n'est peut-être pas correctement initialisé"
             );
           }
-        }, 2000);
+        };
+
+        deepSearch();
       }
     }
 
