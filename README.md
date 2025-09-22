@@ -114,4 +114,4 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 
 
 ---
-Dernière mise à jour : 2025-09-22 13:11:44
+Dernière mise à jour : 2025-09-22 14:47:38
