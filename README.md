@@ -102,7 +102,7 @@ Les logs sont disponibles via WooCommerce > État > Journaux (source: `wc-bookin
 ## 📞 Support
 
 - **Auteur** : TB-Web
-- **Version** : 1.2.0
+- **Version** : 1.2.1
 - **Licence** : GPL v2 or later
 
 ## 🔄 Mises à jour
@@ -116,6 +116,12 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 ---
 
 ## 📋 Changelog
+
+### Version 1.2.1 (2025-09-22)
+
+- 🎨 **Amélioration UX** : Suppression des champs de saisie manuelle "Jour/Mois/Année"
+- 🧹 Nettoyage de l'interface - les champs redondants avec le calendrier visuel sont masqués
+- ⚡ Interface plus épurée et intuitive pour l'utilisateur
 
 ### Version 1.2.0 (2025-09-22)
 

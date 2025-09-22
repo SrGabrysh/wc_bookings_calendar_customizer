@@ -276,47 +276,11 @@ body.woocommerce-page {
 /* ============================================= */
 
 .wc-bookings-date-picker-date-fields {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
-  gap: 12px !important;
-  margin-top: 16px !important;
+  display: none !important;
+  /* Masquer les champs Jour/Mois/Année - inutiles avec le calendrier visuel */
 }
 
-.wc-bookings-date-picker-date-fields label {
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.wc-bookings-date-picker-date-fields label span {
-  font-size: 12px !important;
-  color: var(--gcal-text-secondary) !important;
-  margin-bottom: 4px !important;
-  font-weight: 500 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-}
-
-.wc-bookings-date-picker-date-fields input {
-  padding: 12px !important;
-  border: 1px solid var(--gcal-border-color) !important;
-  border-radius: 4px !important;
-  font-size: 14px !important;
-  background: var(--gcal-background) !important;
-  color: var(--gcal-text-primary) !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-  outline: none !important;
-  font-family: inherit !important;
-}
-
-.wc-bookings-date-picker-date-fields input:focus {
-  border-color: var(--gcal-primary-blue) !important;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2) !important;
-}
-
-.wc-bookings-date-picker-date-fields input::placeholder {
-  color: var(--gcal-text-secondary) !important;
-  opacity: 0.7 !important;
-}
+/* Styles supprimés car les champs sont masqués */
 
 /* ============================================= */
 /* == Sélecteur de créneaux horaires == */
@@ -723,10 +687,7 @@ form.cart button[type="submit"]:not(.wc-bookings-booking-cost) {
     overflow-x: auto !important;
   }
 
-  .wc-bookings-date-picker-date-fields {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
+  /* Champs de date masqués - aucun style responsive nécessaire */
 
   .block-picker ul {
     gap: 6px !important;
