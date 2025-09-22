@@ -648,10 +648,10 @@ form.cart button[type="submit"]:not(.wc-bookings-booking-cost) {
 .single-product #wc-bookings-booking-form,
 #wc-bookings-booking-form,
 .wc-bookings-booking-form {
-  /* Dimensions fixes pour accueillir le calendrier Google Calendar */
+  /* Dimensions flexibles pour desktop */
   width: 450px !important;
-  min-width: 450px !important;
-  max-width: none !important;
+  min-width: 400px !important;
+  max-width: 500px !important;
 
   /* Permettre le débordement si nécessaire */
   overflow: visible !important;
@@ -696,45 +696,120 @@ form.cart button[type="submit"]:not(.wc-bookings-booking-cost) {
 /* == Responsive Design == */
 /* ============================================= */
 
-@media (max-width: 768px) {
-  /* Sur mobile, réduire mais garder une taille suffisante */
+/* Tablette */
+@media (max-width: 1024px) {
   .woocommerce #wc-bookings-booking-form,
   .woocommerce-page #wc-bookings-booking-form,
   .single-product #wc-bookings-booking-form,
   #wc-bookings-booking-form {
-    width: 380px !important;
-    min-width: 380px !important;
-    overflow-x: auto !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    min-width: auto !important;
+    margin: 16px auto !important;
+  }
+
+  .single-product .product .summary,
+  .woocommerce-page .product .summary,
+  .woocommerce .product .summary {
+    min-width: auto !important;
+    width: 100% !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .woocommerce #wc-bookings-booking-form,
+  .woocommerce-page #wc-bookings-booking-form,
+  .single-product #wc-bookings-booking-form,
+  #wc-bookings-booking-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
     padding: 16px !important;
-    margin: 10px 0 !important;
-  }
-
-  /* Permettre le scroll horizontal sur mobile si nécessaire */
-  body {
-    overflow-x: auto !important;
-  }
-
-  /* Champs de date masqués - aucun style responsive nécessaire */
-
-  .block-picker ul {
-    gap: 6px !important;
-  }
-
-  .block-picker li a {
-    padding: 8px 12px !important;
-    font-size: 13px !important;
+    margin: 16px 0 !important;
+    border-radius: 8px !important;
   }
 
   .ui-datepicker {
-    max-width: 280px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+
+  .ui-datepicker-calendar {
+    width: 100% !important;
+  }
+
+  .ui-datepicker-calendar td a,
+  .ui-datepicker-calendar td span {
+    width: calc((100% - 12px) / 7) !important;
+    height: 40px !important;
+    font-size: 14px !important;
+    min-width: 40px !important;
+  }
+
+  .ui-datepicker-header {
+    padding: 12px 8px !important;
+  }
+
+  .ui-datepicker-title {
+    font-size: 16px !important;
+  }
+
+  .block-picker ul {
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+
+  .block-picker li a {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .wc-bookings-booking-cost {
+    padding: 20px !important;
+    font-size: 18px !important;
+    margin: 20px 0 !important;
+    border-radius: 12px !important;
+    min-height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* Très petit mobile */
+@media (max-width: 480px) {
+  .ui-datepicker {
     padding: 12px !important;
   }
 
   .ui-datepicker-calendar td a,
   .ui-datepicker-calendar td span {
-    width: 32px !important;
-    height: 32px !important;
+    height: 36px !important;
     font-size: 13px !important;
+    min-width: 36px !important;
+  }
+
+  .ui-datepicker-title {
+    font-size: 14px !important;
+  }
+
+  .block-picker li a {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+    min-height: 40px !important;
+  }
+
+  .wc-bookings-booking-cost {
+    font-size: 16px !important;
+    padding: 16px !important;
+    min-height: 56px !important;
   }
 }
 

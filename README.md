@@ -102,7 +102,7 @@ Les logs sont disponibles via WooCommerce > État > Journaux (source: `wc-bookin
 ## 📞 Support
 
 - **Auteur** : TB-Web
-- **Version** : 1.2.3
+- **Version** : 1.3.0
 - **Licence** : GPL v2 or later
 
 ## 🔄 Mises à jour
@@ -116,6 +116,16 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 ---
 
 ## 📋 Changelog
+
+### Version 1.3.0 (2025-09-22)
+
+- 📱 **Fonctionnalité majeure** : Design responsive complet pour mobile et tablette
+- 🎨 Calendrier s'adapte automatiquement à toutes les tailles d'écran
+- 📏 Dimensions flexibles : 100% sur mobile, centré sur tablette, fixe sur desktop
+- 🔄 Redimensionnement dynamique avec gestionnaire JavaScript
+- 📍 Cellules de calendrier calculées pour s'adapter parfaitement sur mobile
+- 🎯 Boutons et textes optimisés pour les interactions tactiles
+- 📱 Support complet des très petits écrans (480px et moins)
 
 ### Version 1.2.3 (2025-09-22)
 
