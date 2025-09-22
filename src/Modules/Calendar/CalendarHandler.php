@@ -43,9 +43,17 @@ class CalendarHandler {
             return;
         }
         
+        // Désactiver tous les styles WooCommerce Bookings
         wp_dequeue_style( 'wc-bookings-styles' );
+        wp_dequeue_style( 'wc_bookings_styles' );
         wp_dequeue_style( 'jquery-ui-style' );
         wp_dequeue_style( 'wc-bookings-jquery-ui-styles' );
+        wp_dequeue_style( 'jquery-ui-datepicker' );
+        wp_dequeue_style( 'jquery-ui-theme' );
+        
+        // Désactiver également les scripts qui pourraient interférer
+        wp_dequeue_script( 'wc-bookings-date-picker' );
+        wp_dequeue_script( 'wc-bookings-time-picker' );
         
         $this->logger->debug( 'Styles natifs désactivés' );
     }
@@ -58,8 +66,16 @@ class CalendarHandler {
             'wc-bookings-customizer-style',
             WC_BOOKINGS_CUSTOMIZER_URL . 'assets/css/style-' . $this->selected_style . '.css',
             array(),
-            WC_BOOKINGS_CUSTOMIZER_VERSION
+            WC_BOOKINGS_CUSTOMIZER_VERSION . '-' . time() // Cache busting pour debug
         );
+        
+        // Forcer la priorité CSS avec du CSS inline si nécessaire
+        wp_add_inline_style( 'wc-bookings-customizer-style', '
+            /* Force Google Calendar Style Priority */
+            #wc-bookings-booking-form {
+                font-family: "Google Sans", "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            }
+        ' );
     }
     
     /**

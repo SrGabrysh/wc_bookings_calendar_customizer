@@ -29,9 +29,9 @@ class CalendarManager {
      * Initialisation des hooks - responsabilité du manager
      */
     private function init_hooks() {
-        // Hooks pour les scripts et styles
-        add_action( 'wp_enqueue_scripts', array( $this->handler, 'enqueue_assets' ), 20 );
-        add_action( 'wp_enqueue_scripts', array( $this->handler, 'dequeue_native_styles' ), 15 );
+        // Hooks pour les scripts et styles - priorités ajustées
+        add_action( 'wp_enqueue_scripts', array( $this->handler, 'dequeue_native_styles' ), 5 );
+        add_action( 'wp_enqueue_scripts', array( $this->handler, 'enqueue_assets' ), 999 );
         
         // Hook pour la validation
         add_filter( 'wc_bookings_customizer_validate_settings', array( $this->validator, 'validate_settings' ) );
