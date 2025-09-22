@@ -92,6 +92,23 @@ class CalendarHandler {
                 display: block !important;
                 visibility: visible !important;
             }
+            
+            /* CSS critique pour redimensionnement automatique du conteneur */
+            .wc-bookings-booking-form,
+            .wc-bookings-date-picker {
+                min-width: 380px !important;
+                width: auto !important;
+                overflow: visible !important;
+                position: relative !important;
+                z-index: 999 !important;
+            }
+            
+            /* Forcer l\'expansion des conteneurs parents */
+            .single-product .product .summary,
+            .woocommerce-page .product .summary {
+                overflow: visible !important;
+                min-width: 400px !important;
+            }
         ' );
     }
     

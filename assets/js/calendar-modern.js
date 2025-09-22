@@ -74,6 +74,7 @@
       this.customizeCalendarHeader();
       this.addCalendarIcons();
       this.addPriceAnimations();
+      this.fixContainerSizing();
     }
 
     /**
@@ -542,6 +543,152 @@
             `;
 
       $("head").append(touchCSS);
+    }
+
+    /**
+     * Corriger automatiquement la taille des conteneurs
+     */
+    fixContainerSizing() {
+      // Fonction pour redimensionner les conteneurs
+      const resizeContainers = () => {
+        const $bookingForm = $(
+          "#wc-bookings-booking-form, .wc-bookings-booking-form"
+        );
+        const $datePicker = $(".wc-bookings-date-picker");
+        const $calendar = $(".ui-datepicker");
+
+        if ($bookingForm.length) {
+          // Vérifier si le conteneur est trop petit
+          const currentWidth = $bookingForm.width();
+          const minRequiredWidth = 380;
+
+          if (currentWidth < minRequiredWidth) {
+            console.log(
+              "📅 Calendrier Google: Redimensionnement automatique du conteneur"
+            );
+
+            // Appliquer les corrections CSS dynamiquement
+            $bookingForm.css({
+              "min-width": minRequiredWidth + "px",
+              width: "auto",
+              overflow: "visible",
+              position: "relative",
+              "z-index": "999",
+            });
+
+            // Forcer l'expansion des conteneurs parents
+            $bookingForm.parents().each(function () {
+              const $parent = $(this);
+              if ($parent.css("overflow") === "hidden") {
+                $parent.css("overflow", "visible");
+              }
+              if ($parent.width() < minRequiredWidth) {
+                $parent.css("min-width", minRequiredWidth + "px");
+              }
+            });
+
+            // Message de confirmation
+            this.showResizeNotification();
+          }
+        }
+
+        // Redimensionner spécifiquement le calendrier si nécessaire
+        if ($calendar.length) {
+          const calendarWidth = $calendar.width();
+          if (calendarWidth < 320) {
+            $calendar.css("min-width", "320px");
+          }
+        }
+      };
+
+      // Appliquer immédiatement
+      resizeContainers();
+
+      // Réappliquer après un délai pour s'assurer que tout est chargé
+      setTimeout(resizeContainers, 500);
+      setTimeout(resizeContainers, 1000);
+
+      // Observer les changements de taille de fenêtre
+      $(window).on("resize", Utils.debounce(resizeContainers, 250));
+
+      // Observer les mutations du DOM pour détecter les nouveaux calendriers
+      const observer = new MutationObserver((mutations) => {
+        let shouldResize = false;
+        mutations.forEach((mutation) => {
+          if (mutation.type === "childList") {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                // Element node
+                const $node = $(node);
+                if (
+                  $node.hasClass("ui-datepicker") ||
+                  $node.find(".ui-datepicker").length
+                ) {
+                  shouldResize = true;
+                }
+              }
+            });
+          }
+        });
+
+        if (shouldResize) {
+          setTimeout(resizeContainers, 100);
+        }
+      });
+
+      // Observer le body pour les changements
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    /**
+     * Afficher une notification de redimensionnement
+     */
+    showResizeNotification() {
+      const $notification = $(`
+        <div class="gcal-resize-notification" style="
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #4CAF50;
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 9999;
+          font-size: 14px;
+          font-weight: 500;
+          opacity: 0;
+          transform: translateX(100%);
+          transition: all 0.3s ease;
+        ">
+          📅 Calendrier ajusté automatiquement
+        </div>
+      `);
+
+      $("body").append($notification);
+
+      // Animation d'entrée
+      setTimeout(() => {
+        $notification.css({
+          opacity: "1",
+          transform: "translateX(0)",
+        });
+      }, 100);
+
+      // Suppression automatique après 3 secondes
+      setTimeout(() => {
+        $notification.css({
+          opacity: "0",
+          transform: "translateX(100%)",
+        });
+
+        setTimeout(() => {
+          $notification.remove();
+        }, 300);
+      }, 3000);
     }
   }
 
