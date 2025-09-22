@@ -102,7 +102,7 @@ Les logs sont disponibles via WooCommerce > État > Journaux (source: `wc-bookin
 ## 📞 Support
 
 - **Auteur** : TB-Web
-- **Version** : 1.2.1
+- **Version** : 1.2.2
 - **Licence** : GPL v2 or later
 
 ## 🔄 Mises à jour
@@ -116,6 +116,14 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 ---
 
 ## 📋 Changelog
+
+### Version 1.2.2 (2025-09-22)
+
+- 🎯 **Correction UX critique** : Résolution de la confusion visuelle des dates
+- 🔵 La date sélectionnée prend maintenant la priorité visuelle (bleu) sur "aujourd'hui" (jaune)
+- 🎨 "Aujourd'hui" non-sélectionné devient plus discret avec bordure jaune
+- ✨ Suppression du point noir quand "aujourd'hui" est sélectionné
+- 🧠 Interface plus intuitive sans ambiguïté sur la date choisie
 
 ### Version 1.2.1 (2025-09-22)
 

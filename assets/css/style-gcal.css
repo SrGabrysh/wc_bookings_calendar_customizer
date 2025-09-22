@@ -238,6 +238,14 @@ body.woocommerce-page {
   position: relative !important;
 }
 
+/* Jour d'aujourd'hui NON sélectionné : style plus discret */
+.ui-datepicker-calendar .ui-datepicker-today:not(.ui-datepicker-current-day) a {
+  background-color: rgba(253, 216, 53, 0.3) !important;
+  color: var(--gcal-text-primary) !important;
+  font-weight: 500 !important;
+  border: 2px solid var(--gcal-day-today) !important;
+}
+
 .ui-datepicker-calendar .ui-datepicker-today a::after {
   content: "" !important;
   position: absolute !important;
@@ -257,6 +265,21 @@ body.woocommerce-page {
   color: #ffffff !important;
   font-weight: 600 !important;
   box-shadow: 0 2px 4px rgba(26, 115, 232, 0.3) !important;
+}
+
+/* PRIORITÉ : Jour sélectionné prend le dessus sur "aujourd'hui" */
+.ui-datepicker-calendar .ui-datepicker-today.ui-datepicker-current-day a,
+.ui-datepicker-calendar .ui-datepicker-today .ui-state-active {
+  background-color: var(--gcal-day-selected) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 4px rgba(26, 115, 232, 0.3) !important;
+}
+
+/* Masquer le point noir d'aujourd'hui quand la date est sélectionnée */
+.ui-datepicker-calendar .ui-datepicker-today.ui-datepicker-current-day a::after,
+.ui-datepicker-calendar .ui-datepicker-today .ui-state-active::after {
+  display: none !important;
 }
 
 /* Jours hors du mois (grisés) */
