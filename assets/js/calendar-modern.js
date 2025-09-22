@@ -839,21 +839,71 @@
      * Déclencher le calcul initial du prix pour la date présélectionnée
      */
     triggerInitialPriceCalculation() {
-      console.log("🎯 Déclenchement du calcul initial du prix");
+      console.log(
+        "🎯 Déclenchement du calcul initial du prix - Attente intelligente"
+      );
 
-      // Attendre que le calendrier soit complètement chargé
-      setTimeout(() => {
-        this.forceInitialDateSelection();
-      }, 1500);
-
-      // Deuxième tentative après un délai plus long si nécessaire
-      setTimeout(() => {
-        this.forceInitialDateSelection();
-      }, 3000);
+      // Stratégie d'attente intelligente avec détection d'événements
+      this.waitForBookingFormReady();
     }
 
     /**
-     * Forcer la sélection de la date initiale pour déclencher le calcul
+     * Attendre intelligemment que le formulaire de réservation soit prêt
+     */
+    waitForBookingFormReady() {
+      let attempts = 0;
+      const maxAttempts = 15;
+      const baseDelay = 200; // Commencer avec 200ms
+
+      const checkAndTrigger = () => {
+        attempts++;
+
+        // Vérifier si le formulaire et le calendrier sont prêts
+        const $bookingForm = $(
+          "#wc-bookings-booking-form, .wc-bookings-booking-form"
+        );
+        const $datePicker = $(".wc-bookings-date-picker");
+        const $calendar = $(".ui-datepicker");
+
+        // Conditions pour considérer que c'est prêt
+        const formReady =
+          $bookingForm.length > 0 && $bookingForm.is(":visible");
+        const datePickerReady = $datePicker.length > 0;
+        const calendarExists = $calendar.length > 0;
+
+        if (formReady && datePickerReady) {
+          console.log(
+            `✅ Formulaire de réservation prêt après ${attempts} tentatives`
+          );
+
+          // Attendre encore un peu pour que jQuery UI finisse l'initialisation
+          setTimeout(() => {
+            this.forceInitialDateSelection();
+          }, 300);
+
+          return; // Arrêter les tentatives
+        }
+
+        if (attempts >= maxAttempts) {
+          console.warn(
+            `⚠️ Timeout: Formulaire non prêt après ${maxAttempts} tentatives`
+          );
+          // Essayer quand même au cas où
+          this.forceInitialDateSelection();
+          return;
+        }
+
+        // Délai progressif : 200ms, 400ms, 600ms, puis plafonné à 1000ms
+        const delay = Math.min(baseDelay * attempts, 1000);
+        setTimeout(checkAndTrigger, delay);
+      };
+
+      // Démarrer immédiatement
+      checkAndTrigger();
+    }
+
+    /**
+     * Forcer la sélection de la date initiale pour déclencher le calcul (version optimisée)
      */
     forceInitialDateSelection() {
       const $todayCell = $(
@@ -880,19 +930,31 @@
           $bookingForm.trigger("wc_bookings_field_changed");
 
           console.log("📅 Événements de calcul de prix déclenchés");
-        }, 500);
+        }, 300);
 
         // Méthode 4: Forcer la mise à jour du coût si l'élément existe déjà
         setTimeout(() => {
           this.updatePriceDisplayIfExists();
-        }, 1000);
+        }, 600);
       } else {
-        console.log("⚠️ Date du jour non trouvée, nouvelle tentative...");
+        // Une seule tentative supplémentaire après un délai plus long
+        console.log("⚠️ Date du jour non trouvée, tentative finale dans 2s...");
 
-        // Réessayer après un délai
         setTimeout(() => {
-          this.forceInitialDateSelection();
-        }, 1000);
+          const $todayCellRetry = $(
+            ".ui-datepicker-today a, .ui-datepicker-current-day a, .ui-state-active"
+          );
+
+          if ($todayCellRetry.length) {
+            console.log("✅ Date du jour trouvée lors de la tentative finale");
+            $todayCellRetry.trigger("click");
+            this.updatePriceDisplayIfExists();
+          } else {
+            console.warn(
+              "❌ Date du jour définitivement non trouvée - calendrier peut-être non initialisé"
+            );
+          }
+        }, 2000);
       }
     }
 
@@ -924,46 +986,71 @@
     }
 
     /**
-     * Transformer l'élément prix en bouton de réservation élégant
+     * Transformer l'élément prix en bouton de réservation élégant (optimisé)
      */
     transformPriceToButton() {
-      console.log("🎨 Transformation du prix en bouton de réservation");
+      console.log(
+        "🎨 Transformation du prix en bouton de réservation - Optimisé"
+      );
 
-      // Attendre que l'élément prix soit présent
+      // Stratégie d'attente optimisée pour l'élément prix
+      let attempts = 0;
+      const maxAttempts = 10;
+
       const waitForPriceElement = () => {
+        attempts++;
         const $priceElement = $(".wc-bookings-booking-cost");
 
         if ($priceElement.length) {
+          console.log(`✅ Élément prix trouvé après ${attempts} tentatives`);
           this.setupPriceButtonBehavior($priceElement);
-        } else {
-          // Réessayer après un délai
-          setTimeout(waitForPriceElement, 1000);
+          return;
         }
+
+        if (attempts >= maxAttempts) {
+          console.warn(
+            "⚠️ Élément prix non trouvé après maximum de tentatives"
+          );
+          return;
+        }
+
+        // Délai progressif mais plus rapide
+        const delay = Math.min(100 * attempts, 500);
+        setTimeout(waitForPriceElement, delay);
       };
 
-      // Démarrer immédiatement et surveiller les changements
+      // Démarrer immédiatement
       waitForPriceElement();
 
-      // Observer les changements dans le DOM pour les nouveaux éléments prix
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1) {
-              const $newPriceElement = $(node).find(
-                ".wc-bookings-booking-cost"
-              );
-              if ($newPriceElement.length) {
-                this.setupPriceButtonBehavior($newPriceElement);
+      // Observer optimisé - seulement pour les changements dans le formulaire de booking
+      const $bookingContainer = $(
+        "#wc-bookings-booking-form, .wc-bookings-booking-form"
+      );
+
+      if ($bookingContainer.length) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                const $newPriceElement = $(node).find(
+                  ".wc-bookings-booking-cost"
+                );
+                if (
+                  $newPriceElement.length &&
+                  !$newPriceElement.hasClass("price-button-initialized")
+                ) {
+                  this.setupPriceButtonBehavior($newPriceElement);
+                }
               }
-            }
+            });
           });
         });
-      });
 
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+        observer.observe($bookingContainer[0], {
+          childList: true,
+          subtree: true,
+        });
+      }
     }
 
     /**
