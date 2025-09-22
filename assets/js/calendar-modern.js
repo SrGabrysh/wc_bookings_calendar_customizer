@@ -75,6 +75,7 @@
       this.addCalendarIcons();
       this.addPriceAnimations();
       this.fixContainerSizing();
+      this.triggerInitialPriceCalculation();
     }
 
     /**
@@ -629,8 +630,15 @@
       console.group("📊 Debug Conteneur Google Calendar");
 
       if ($bookingForm.length) {
+        const element = $bookingForm[0];
+        const rect = element.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(element);
+
         console.log("📦 Formulaire booking:", {
-          width: $bookingForm.width() + "px",
+          "jQuery width": $bookingForm.width() + "px",
+          getBoundingClientRect: rect.width + "px",
+          offsetWidth: element.offsetWidth + "px",
+          "computed width": computedStyle.width,
           height: $bookingForm.height() + "px",
           visible: $bookingForm.is(":visible"),
           overflow: $bookingForm.css("overflow"),
@@ -736,7 +744,9 @@
           if (currentWidth < 450) {
             overrideCount++;
             console.log(
-              `🚀 Override nucléaire #${overrideCount}: ${currentWidth}px → 450px`
+              `🚀 Override nucléaire #${overrideCount}: ${Math.round(
+                currentWidth
+              )}px → 450px`
             );
 
             // Méthode 1: setProperty avec important
@@ -777,7 +787,7 @@
 
             // Programmer une vérification
             setTimeout(() => {
-              const newWidth = $form.width();
+              const newWidth = $form[0].getBoundingClientRect().width;
               if (newWidth < 450) {
                 console.log(
                   `❌ Override échoué: ${newWidth}px. Nouvelle tentative...`
@@ -821,6 +831,94 @@
           attributes: true,
           attributeFilter: ["style", "class"],
         });
+      }
+    }
+
+    /**
+     * Déclencher le calcul initial du prix pour la date présélectionnée
+     */
+    triggerInitialPriceCalculation() {
+      console.log("🎯 Déclenchement du calcul initial du prix");
+
+      // Attendre que le calendrier soit complètement chargé
+      setTimeout(() => {
+        this.forceInitialDateSelection();
+      }, 1500);
+
+      // Deuxième tentative après un délai plus long si nécessaire
+      setTimeout(() => {
+        this.forceInitialDateSelection();
+      }, 3000);
+    }
+
+    /**
+     * Forcer la sélection de la date initiale pour déclencher le calcul
+     */
+    forceInitialDateSelection() {
+      const $todayCell = $(
+        ".ui-datepicker-today a, .ui-datepicker-current-day a, .ui-state-active"
+      );
+      const $bookingForm = $(
+        "#wc-bookings-booking-form, .wc-bookings-booking-form"
+      );
+
+      if ($todayCell.length && $bookingForm.length) {
+        console.log("✅ Date du jour trouvée, déclenchement du calcul de prix");
+
+        // Méthode 1: Déclencher un clic sur la date du jour
+        $todayCell.trigger("click");
+
+        // Méthode 2: Déclencher les événements de changement sur les champs de date
+        setTimeout(() => {
+          const $dateFields = $bookingForm.find(
+            ".booking_date_day, .booking_date_month, .booking_date_year"
+          );
+          $dateFields.trigger("change");
+
+          // Méthode 3: Déclencher l'événement personnalisé WooCommerce
+          $bookingForm.trigger("wc_bookings_field_changed");
+
+          console.log("📅 Événements de calcul de prix déclenchés");
+        }, 500);
+
+        // Méthode 4: Forcer la mise à jour du coût si l'élément existe déjà
+        setTimeout(() => {
+          this.updatePriceDisplayIfExists();
+        }, 1000);
+      } else {
+        console.log("⚠️ Date du jour non trouvée, nouvelle tentative...");
+
+        // Réessayer après un délai
+        setTimeout(() => {
+          this.forceInitialDateSelection();
+        }, 1000);
+      }
+    }
+
+    /**
+     * Mettre à jour l'affichage du prix s'il existe déjà
+     */
+    updatePriceDisplayIfExists() {
+      const $costElement = $(".wc-bookings-booking-cost");
+
+      if ($costElement.length && $costElement.text().trim() !== "") {
+        console.log("💰 Prix déjà calculé:", $costElement.text());
+
+        // Ajouter une animation pour attirer l'attention
+        $costElement.addClass("price-highlight");
+
+        setTimeout(() => {
+          $costElement.removeClass("price-highlight");
+        }, 2000);
+      } else {
+        console.log("⏳ Prix pas encore calculé, déclenchement manuel...");
+
+        // Essayer de déclencher le calcul manuellement
+        const $form = $("#wc-bookings-booking-form");
+        if ($form.length) {
+          // Simuler un changement sur le formulaire
+          $form.find("input, select").first().trigger("change");
+        }
       }
     }
 
@@ -930,10 +1028,21 @@
       const $calendar = $(".ui-datepicker");
 
       console.group("🧪 Test Dimensions Conteneur");
-      console.log(
-        "Formulaire booking:",
-        $form.length ? `${$form.width()}px × ${$form.height()}px` : "Non trouvé"
-      );
+      if ($form.length) {
+        const rect = $form[0].getBoundingClientRect();
+        console.log(
+          "Formulaire booking:",
+          `${Math.round(rect.width)}px × ${Math.round(
+            rect.height
+          )}px (getBoundingClientRect)`
+        );
+        console.log(
+          "Formulaire booking (jQuery):",
+          `${$form.width()}px × ${$form.height()}px`
+        );
+      } else {
+        console.log("Formulaire booking:", "Non trouvé");
+      }
       console.log(
         "Calendrier jQuery UI:",
         $calendar.length
@@ -998,6 +1107,45 @@
         window.calendarInstance.logContainerInfo();
       } else {
         console.log("❌ Instance de calendrier non trouvée");
+      }
+    },
+
+    /**
+     * Tester le calcul automatique du prix
+     */
+    testPriceCalculation: function () {
+      console.group("🧪 Test Calcul Prix Initial");
+
+      const $todayCell = $(
+        ".ui-datepicker-today a, .ui-datepicker-current-day a, .ui-state-active"
+      );
+      const $costElement = $(".wc-bookings-booking-cost");
+      const $bookingForm = $(
+        "#wc-bookings-booking-form, .wc-bookings-booking-form"
+      );
+
+      console.log("Date du jour trouvée:", $todayCell.length > 0);
+      console.log("Formulaire booking trouvé:", $bookingForm.length > 0);
+      console.log("Élément prix trouvé:", $costElement.length > 0);
+
+      if ($costElement.length) {
+        console.log("Contenu prix actuel:", $costElement.text().trim());
+      }
+
+      console.groupEnd();
+
+      // Déclencher manuellement le calcul
+      if (window.calendarInstance) {
+        window.calendarInstance.forceInitialDateSelection();
+      }
+    },
+
+    /**
+     * Forcer l'affichage du prix
+     */
+    forcePriceDisplay: function () {
+      if (window.calendarInstance) {
+        window.calendarInstance.updatePriceDisplayIfExists();
       }
     },
   };

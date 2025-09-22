@@ -540,6 +540,40 @@ body.woocommerce-page {
   font-size: 16px !important;
   font-weight: 500 !important;
   color: var(--gcal-primary-blue) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Animation de mise en évidence du prix */
+.wc-bookings-booking-cost.price-highlight {
+  background: linear-gradient(
+    135deg,
+    var(--gcal-success),
+    var(--gcal-light-blue)
+  ) !important;
+  border-color: var(--gcal-success) !important;
+  color: #ffffff !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3) !important;
+  animation: priceHighlight 2s ease !important;
+}
+
+@keyframes priceHighlight {
+  0% {
+    background: var(--gcal-light-blue);
+    transform: scale(1);
+  }
+  50% {
+    background: linear-gradient(
+      135deg,
+      var(--gcal-success),
+      var(--gcal-light-blue)
+    );
+    transform: scale(1.02);
+  }
+  100% {
+    background: var(--gcal-light-blue);
+    transform: scale(1);
+  }
 }
 
 /* ============================================= */
@@ -582,6 +616,11 @@ body.woocommerce-page {
   /* Marges pour éviter la collision avec les éléments adjacents */
   margin-left: 0 !important;
   margin-right: 20px !important;
+
+  /* Éliminer l'effet de fenêtre sous fenêtre */
+  box-shadow: var(--gcal-shadow-soft) !important;
+  background: var(--gcal-card-background) !important;
+  border: 1px solid var(--gcal-border-color) !important;
 }
 
 /* Forcer les conteneurs parents à s'adapter */
@@ -591,6 +630,10 @@ body.woocommerce-page {
   /* Élargir le conteneur parent */
   min-width: 500px !important;
   overflow: visible !important;
+
+  /* Assurer une intégration harmonieuse */
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 /* Conteneur spécifique du date picker */
