@@ -238,23 +238,27 @@ body.woocommerce-page {
   position: relative !important;
 }
 
-/* Jour d'aujourd'hui NON sélectionné : style plus discret */
+/* Jour d'aujourd'hui NON sélectionné : style très discret */
 .ui-datepicker-calendar .ui-datepicker-today:not(.ui-datepicker-current-day) a {
-  background-color: rgba(253, 216, 53, 0.3) !important;
+  background-color: transparent !important;
   color: var(--gcal-text-primary) !important;
   font-weight: 500 !important;
-  border: 2px solid var(--gcal-day-today) !important;
+  border: 1px solid rgba(253, 216, 53, 0.4) !important;
+  position: relative !important;
 }
 
-.ui-datepicker-calendar .ui-datepicker-today a::after {
+/* Point indicateur pour "aujourd'hui" seulement si pas sélectionné */
+.ui-datepicker-calendar
+  .ui-datepicker-today:not(.ui-datepicker-current-day)
+  a::after {
   content: "" !important;
   position: absolute !important;
   bottom: 2px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  width: 4px !important;
-  height: 4px !important;
-  background: var(--gcal-text-primary) !important;
+  width: 3px !important;
+  height: 3px !important;
+  background: rgba(253, 216, 53, 0.6) !important;
   border-radius: 50% !important;
 }
 

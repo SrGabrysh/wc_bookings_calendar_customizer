@@ -102,7 +102,7 @@ Les logs sont disponibles via WooCommerce > État > Journaux (source: `wc-bookin
 ## 📞 Support
 
 - **Auteur** : TB-Web
-- **Version** : 1.2.2
+- **Version** : 1.2.3
 - **Licence** : GPL v2 or later
 
 ## 🔄 Mises à jour
@@ -116,6 +116,14 @@ Le plugin respecte les standards WordPress pour les mises à jour automatiques e
 ---
 
 ## 📋 Changelog
+
+### Version 1.2.3 (2025-09-22)
+
+- 🎯 **Correction UX finale** : Style "aujourd'hui" maintenant ultra-discret
+- 👻 Fond transparent pour "aujourd'hui" non-sélectionné (plus de confusion)
+- 🔍 Bordure très subtile (40% opacité) pour indiquer discrètement "aujourd'hui"
+- 📍 Point indicateur plus petit et transparent pour "aujourd'hui" non-sélectionné
+- ✨ Élimination complète de la confusion visuelle
 
 ### Version 1.2.2 (2025-09-22)
 
