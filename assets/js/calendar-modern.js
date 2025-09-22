@@ -561,29 +561,36 @@
         const $summary = $(".single-product .product .summary");
 
         if ($bookingForm.length) {
-          // Forcer les dimensions du formulaire
-          $bookingForm.css({
-            width: "450px",
-            "min-width": "450px",
-            "max-width": "none",
-            overflow: "visible",
-            position: "relative",
-            "z-index": "1000",
-            "margin-right": "20px",
-          });
+          // Forcer les dimensions du formulaire avec !important via setProperty
+          const formElement = $bookingForm[0];
+          if (formElement) {
+            formElement.style.setProperty('width', '450px', 'important');
+            formElement.style.setProperty('min-width', '450px', 'important');
+            formElement.style.setProperty('max-width', 'none', 'important');
+            formElement.style.setProperty('overflow', 'visible', 'important');
+            formElement.style.setProperty('position', 'relative', 'important');
+            formElement.style.setProperty('z-index', '1000', 'important');
+            formElement.style.setProperty('margin-right', '20px', 'important');
+            formElement.style.setProperty('box-sizing', 'border-box', 'important');
+          }
 
-          // Forcer les dimensions du conteneur parent
+          // Forcer les dimensions du conteneur parent avec !important
           if ($summary.length) {
-            $summary.css({
-              "min-width": "500px",
-              overflow: "visible",
-            });
+            const summaryElement = $summary[0];
+            if (summaryElement) {
+              summaryElement.style.setProperty('min-width', '500px', 'important');
+              summaryElement.style.setProperty('overflow', 'visible', 'important');
+              summaryElement.style.setProperty('width', 'auto', 'important');
+            }
           }
 
           console.log("✅ Conteneur forcé à 450px de largeur");
 
           // Afficher les informations de debug
           this.logContainerInfo();
+          
+          // Ajouter un outil de debug pour analyser la priorité CSS
+          this.addCSSDebugTool();
         }
       };
 
@@ -631,6 +638,67 @@
       }
 
       console.groupEnd();
+    }
+
+    /**
+     * Ajouter un outil de debug CSS
+     */
+    addCSSDebugTool() {
+      // Ajouter une méthode globale pour analyser les styles
+      window.GCalDebug = window.GCalDebug || {};
+      window.GCalDebug.analyzeCSSPriority = function() {
+        const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+        if ($form.length) {
+          const element = $form[0];
+          const computedStyle = window.getComputedStyle(element);
+          
+          console.group("🔍 Analyse Priorité CSS");
+          console.log("Width calculée:", computedStyle.width);
+          console.log("Min-width calculée:", computedStyle.minWidth);
+          console.log("Max-width calculée:", computedStyle.maxWidth);
+          console.log("Box-sizing:", computedStyle.boxSizing);
+          console.log("Overflow:", computedStyle.overflow);
+          console.log("Position:", computedStyle.position);
+          console.log("Styles inline:", element.style.cssText);
+          
+          // Analyser les règles CSS appliquées
+          const sheets = Array.from(document.styleSheets);
+          let matchingRules = [];
+          
+          sheets.forEach(sheet => {
+            try {
+              const rules = Array.from(sheet.cssRules || sheet.rules || []);
+              rules.forEach(rule => {
+                if (rule.selectorText && element.matches && element.matches(rule.selectorText)) {
+                  if (rule.style && (rule.style.width || rule.style.minWidth)) {
+                    matchingRules.push({
+                      selector: rule.selectorText,
+                      width: rule.style.width,
+                      minWidth: rule.style.minWidth,
+                      priority: rule.style.getPropertyPriority('width')
+                    });
+                  }
+                }
+              });
+            } catch(e) {
+              // Ignorer les erreurs de CORS
+            }
+          });
+          
+          console.log("Règles CSS correspondantes:", matchingRules);
+          console.groupEnd();
+          
+          return {
+            computed: {
+              width: computedStyle.width,
+              minWidth: computedStyle.minWidth,
+              maxWidth: computedStyle.maxWidth
+            },
+            inline: element.style.cssText,
+            matchingRules: matchingRules
+          };
+        }
+      };
     }
 
     /**
@@ -763,24 +831,28 @@
     /**
      * Forcer le redimensionnement manuel
      */
-    forceResize: function (width = 450) {
-      const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
-      const $summary = $(".single-product .product .summary");
+      forceResize: function (width = 450) {
+        const $form = $("#wc-bookings-booking-form, .wc-bookings-booking-form");
+        const $summary = $(".single-product .product .summary");
 
-      $form.css({
-        width: width + "px",
-        "min-width": width + "px",
-        overflow: "visible",
-      });
+        // Forcer avec setProperty pour override complet
+        if ($form.length) {
+          const formElement = $form[0];
+          formElement.style.setProperty('width', width + 'px', 'important');
+          formElement.style.setProperty('min-width', width + 'px', 'important');
+          formElement.style.setProperty('max-width', 'none', 'important');
+          formElement.style.setProperty('overflow', 'visible', 'important');
+        }
 
-      $summary.css({
-        "min-width": width + 50 + "px",
-        overflow: "visible",
-      });
+        if ($summary.length) {
+          const summaryElement = $summary[0];
+          summaryElement.style.setProperty('min-width', (width + 50) + 'px', 'important');
+          summaryElement.style.setProperty('overflow', 'visible', 'important');
+        }
 
-      console.log(`✅ Conteneur forcé à ${width}px`);
-      return this.testContainerSize();
-    },
+        console.log(`✅ Conteneur forcé à ${width}px avec setProperty`);
+        return this.testContainerSize();
+      },
 
     /**
      * Réinitialiser les styles
